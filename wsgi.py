@@ -763,10 +763,11 @@ class Hello(object):
     m = 10
     # 第1齒輪齒數
     n_g1 = 13
-
-
+    # 第2齒輪齒數
+    n_g2 = 19
     # 計算兩齒輪的節圓半徑
     rp_g1 = m*n_g1/2
+    rp_g2 = m*n_g2/2
 
     # 將第1齒輪順時鐘轉 90 度
     # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
@@ -779,7 +780,16 @@ class Hello(object):
     ctx.translate(-400,-400)
     spur.Spur(ctx).Gear(400,400,rp_g1,n_g1, pa, "blue")
     ctx.restore()
-
+    # 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+    ctx.save()
+    # translate to the origin of second gear
+    ctx.translate(400+rp_g1+rp_g2,400)
+    # rotate to engage
+    ctx.rotate(-pi/2-pi/n_g2)
+    # put it back
+    ctx.translate(-(400+rp_g1+rp_g2),-400)
+    spur.Spur(ctx).Gear(400+rp_g1+rp_g2,400,rp_g2,n_g2, pa, "black")
+    ctx.restore()
 
     # 按照上面三個正齒輪的囓合轉角運算, 隨後的傳動齒輪轉角便可依此類推, 完成6個齒輪的囓合繪圖
 
