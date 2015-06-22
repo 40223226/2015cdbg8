@@ -84,92 +84,21 @@ class Hello(object):
         return toprint
     #@+node:2014fall.20141215194146.1791: *3* index
     @cherrypy.expose
-    def index(self, guess=None):
-        # 將標準答案存入 answer session 對應區
-        theanswer = random.randint(1, 100)
-        thecount = 0
-        # 將答案與計算次數變數存進 session 對應變數
-        cherrypy.session['answer'] = theanswer
-        cherrypy.session['count'] = thecount
-        # 印出讓使用者輸入的超文件表單
+    def index(self):
         outstring = '''
-    <!DOCTYPE html> 
-    <html>
+     <!DOCTYPE html> 
+     <html>
     <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <!-- 載入 brython.js -->
-    <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
-    <script src="/static/Cango2D.js" type="text/javascript"></script>
-    <script src="/static/gearUtils-04.js" type="text/javascript"></script>
-    </head>
-    <!-- 啟動 brython() -->
-    <body onload="brython()">
-        
-    <form method=POST action=doCheck>
-    請輸入您所猜的整數:<input type=text name=guess><br />
-    <input type=submit value=send>
-    </form>
-    <hr>
-    <!-- 以下在網頁內嵌 Brython 程式 -->
-    <script type="text/python">
-    from browser import document, alert
+    <h1>0622期末考</h1>
+    <h2>40223221</h2>
+    <h2>邱立昇</h2>
 
-    def echo(ev):
-        alert(document["zone"].value)
+    <a href="drawspur">drawgear2</a>(繪出兩顆齒輪)<br />
 
-    # 將文件中名稱為 mybutton 的物件, 透過 click 事件與 echo 函式 bind 在一起
-    document['mybutton'].bind('click',echo)
-    </script>
-    <input id="zone"><button id="mybutton">click !</button>
-    <hr>
-    <!-- 以下為 canvas 畫圖程式 -->
-    <script type="text/python">
-    # 從 browser 導入 document
-    from browser import document
-    import math
-
-    # 畫布指定在名稱為 plotarea 的 canvas 上
-    # 以下使用中文變數名稱
-    canvas = document["plotarea"]
-    ctx = canvas.getContext("2d")
-
-    # 用紅色畫一條直線
-    ctx.beginPath()
-    ctx.lineWidth = 3
-    ctx.moveTo(0, 0)
-    ctx.lineTo(0, 500)
-    ctx.strokeStyle = "red"
-    ctx.stroke()
-
-    # 用藍色再畫一條直線
-    ctx.beginPath()
-    ctx.lineWidth = 3
-    ctx.moveTo(0, 0)
-    ctx.lineTo(500, 0)
-    ctx.strokeStyle = "blue"
-    ctx.stroke()
-
-    # 用綠色再畫一條直線
-    ctx.beginPath()
-    ctx.lineWidth = 3
-    ctx.moveTo(0, 0)
-    ctx.lineTo(500, 500)
-    ctx.strokeStyle = "green"
-    ctx.stroke()
-
-    # 用黑色畫一個圓
-    ctx.beginPath()
-    ctx.lineWidth = 3
-    ctx.strokeStyle = "black"
-    ctx.arc(250,250,50,0,2*math.pi)
-    ctx.stroke()
-    </script>
-    <canvas id="plotarea" width="800" height="600"></canvas>
-    </body>
-    </html>
+       
     '''
-
         return outstring
+
     #@+node:2015.20150330144929.1713: *3* twoDgear
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
@@ -723,15 +652,47 @@ class Hello(object):
     '''
 
         return outstring
-    #@+node:amd.20150415215023.1: *3* mygeartest2
+    #@+node:2015.20150621222226.1: *3* drawspur
     @cherrypy.expose
-    # N 為齒數, M 為模數, P 為壓力角
-    def mygeartest2(self, N=20, M=5, P=15):
+    # N 為上齒數, M 為下齒數, P 為壓力角
+    def drawspur(self,N1=15,N2=24, M=4, P=20,midx=400):
         outstring = '''
     <!DOCTYPE html> 
     <html>
     <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    </head>
+    <body>
+        
+    <form method=POST action=mygeartest2>
+    上齒數:<input type=text name=N1 value='''+str(N1)+'''><br />
+    下齒數:<input type=text name=N2 value='''+str(N2)+'''><br />
+    <input type=submit value=畫出正齒輪輪廓>
+    </form>
+    <h3>齒輪數為介於 15-80 的整數</h3>
+    <br /><a href="index">返回</a><br />
+    <!-- 載入 brython.js -->
+    <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
+    <script>
+    window.onload=function(){
+    brython();
+    }
+    </script>
+    </body>
+    </html>
+    '''
+
+        return outstring
+    #@+node:amd.20150415215023.1: *3* mygeartest2
+    @cherrypy.expose
+    # N 為齒數, M 為模數, P 為壓力角
+    def mygeartest2(self, N1=15, N2=24, M=4, P=15):
+        outstring = '''
+    <!DOCTYPE html> 
+    <html>
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <br /><a href="drawspur">返回</a><br />
     <!-- 載入 brython.js -->
     <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
     <script src="/static/Cango2D.js" type="text/javascript"></script>
@@ -739,6 +700,7 @@ class Hello(object):
     </head>
     <!-- 啟動 brython() -->
     <body onload="brython()">
+
 
     <!-- 以下為 canvas 畫圖程式 -->
     <script type="text/python">
@@ -762,31 +724,21 @@ class Hello(object):
     # m 為模數
     m = 10
     # 第1齒輪齒數
-    n_g1 = 13
+    n_g1 = '''+str(N1)+'''
     # 第2齒輪齒數
-    n_g2 = 19
-    # 第3齒輪齒數
-    n_g3 = 21
-    # 第4齒輪齒數
-    n_g4 = 19
-    # 第5齒輪齒數
-    n_g5 = 19
-    # 第6齒輪齒數
-    n_g6 = 19
+    n_g2 = '''+str(N2)+'''
+
     # 計算兩齒輪的節圓半徑
     rp_g1 = m*n_g1/2
     rp_g2 = m*n_g2/2
-    rp_g3 = m*n_g3/2
-    rp_g4 = m*n_g4/2
-    rp_g5 = m*n_g5/2
-    rp_g6 = m*n_g6/2
+
     # 將第1齒輪順時鐘轉 90 度
     # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
     ctx.save()
     # translate to the origin of second gear
     ctx.translate(400,400)
     # rotate to engage
-    ctx.rotate(pi/2)
+    ctx.rotate(pi)
     # put it back
     ctx.translate(-400,-400)
     spur.Spur(ctx).Gear(400,400,rp_g1,n_g1, pa, "blue")
@@ -794,53 +746,14 @@ class Hello(object):
     # 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
     ctx.save()
     # translate to the origin of second gear
-    ctx.translate(400+rp_g1+rp_g2,400)
+    ctx.translate(400,400+rp_g1+rp_g2)
     # rotate to engage
-    ctx.rotate(-pi/2-pi/n_g2)
+    ctx.rotate(-pi/n_g2)
     # put it back
-    ctx.translate(-(400+rp_g1+rp_g2),-400)
-    spur.Spur(ctx).Gear(400+rp_g1+rp_g2,400,rp_g2,n_g2, pa, "black")
+    ctx.translate(-400,-(400+rp_g1+rp_g2))
+    spur.Spur(ctx).Gear(400,400+rp_g1+rp_g2,rp_g2,n_g2, pa, "black")
     ctx.restore()
-    # 第3齒
-    ctx.save()
-    # translate to the origin of second gear
-    ctx.translate(400+rp_g1+rp_g2+rp_g2+rp_g3,400)
-    # rotate to engage
-    ctx.rotate(pi/2)
-    # put it back
-    ctx.translate(-(400+rp_g1+rp_g2+rp_g2+rp_g3),-400)
-    spur.Spur(ctx).Gear(400+rp_g1+rp_g2+rp_g2+rp_g3,400,rp_g3,n_g3, pa, "yellow")
-    ctx.restore()
-    # 第4齒
-    ctx.save()
-    # translate to the origin of second gear
-    ctx.translate(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4,400)
-    # rotate to engage
-    ctx.rotate(-pi/2-pi/n_g4)
-    # put it back
-    ctx.translate(-(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4),-400)
-    spur.Spur(ctx).Gear(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4,400,rp_g4,n_g4, pa, "purple")
-    ctx.restore()
-    # 第5齒
-    ctx.save()
-    # translate to the origin of second gear
-    ctx.translate(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5,400)
-    # rotate to engage
-    ctx.rotate(pi/2)
-    # put it back
-    ctx.translate(-(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5),-400)
-    spur.Spur(ctx).Gear(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5,400,rp_g5,n_g5, pa, "green")
-    ctx.restore()
-    # 第6齒
-    ctx.save()
-    # translate to the origin of second gear
-    ctx.translate(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5+rp_g5+rp_g6,400)
-    # rotate to engage
-    ctx.rotate(pi/2)
-    # put it back
-    ctx.translate(-(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5+rp_g5+rp_g6),-400)
-    spur.Spur(ctx).Gear(400+rp_g1+rp_g2+rp_g2+rp_g3+rp_g3+rp_g4+rp_g4+rp_g5+rp_g5+rp_g6,400,rp_g6,n_g6, pa, "orange")
-    ctx.restore()
+
 
     # 按照上面三個正齒輪的囓合轉角運算, 隨後的傳動齒輪轉角便可依此類推, 完成6個齒輪的囓合繪圖
 
@@ -1050,6 +963,9 @@ application_conf = {'/static':{
     
 root = Hello()
 root.gear = gear.Gear()
+cherrypy.server.socket_port = 8081
+cherrypy.server.socket_host = '127.0.0.1'
+
 
 if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     # 表示在 OpenSfhit 執行
